@@ -1,0 +1,56 @@
+# keyboard_play.py
+#!/usr/bin/env python3
+"""
+Simple Keyboard Pacman Launcher
+===============================
+
+This script allows you to play Pacman with your keyboard.
+"""
+
+import sys
+import os
+
+# Add the current directory to Python path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Import required modules
+from core.pacman import runGames
+from core.layout import getLayout
+from display.textDisplay import PacmanGraphics
+from agents.keyboardAgents import KeyboardAgent
+from core.ghostAgents import DirectionalGhost
+
+def main():
+    """Launch keyboard-controlled Pacman"""
+    layout_name = "smallClassic"  # Default layout
+    
+    # Allow command line argument for layout
+    if len(sys.argv) > 1:
+        layout_name = sys.argv[1]
+    
+    try:
+        # Get layout
+        layout = getLayout(layout_name)
+        
+        # Create agents
+        pacman = KeyboardAgent()
+        ghosts = [DirectionalGhost(i + 1) for i in range(2)]
+        
+        # Create display
+        display = PacmanGraphics()
+        
+        print(f"Starting Pacman on {layout_name} layout...")
+        print("Controls: WASD or Arrow Keys to move, Q to stop")
+        print("Press Ctrl+C to quit")
+        
+        # Run the game
+        runGames(layout, pacman, ghosts, display, numGames=1, record=False)
+        
+    except KeyboardInterrupt:
+        print("\nGame stopped by user")
+    except Exception as e:
+        print(f"Error: {e}")
+        print("Available layouts: smallClassic, mediumClassic, originalClassic, testClassic, trickyClassic")
+
+if __name__ == "__main__":
+    main()
